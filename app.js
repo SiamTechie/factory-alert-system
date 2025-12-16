@@ -1,7 +1,7 @@
 /**
  * Factory Break Time Alert System
  * Main Application Logic
- * Updated: v1.3 - Auto Dismiss Alarm
+ * Updated: v1.4 - Project File Support
  */
 
 class AlarmManager {
@@ -21,6 +21,12 @@ class AlarmManager {
         this.customSounds = {
             start: null, // { name: filename, data: base64 }
             end: null
+        };
+
+        // Project files mapping
+        this.projectSounds = {
+            'project_bell2': 'sounds/bell_ringing_2.mp3',
+            'project_bell3': 'sounds/bell_ringing_3.mp3'
         };
 
         this.dom = {
@@ -324,32 +330,34 @@ class AlarmManager {
 
         const vol = (this.settings.volume / 100);
 
-        // Check if custom
+        // Check if custom file or project file
+        let audioSrc = null;
+
         if (soundKey === 'custom') {
             const data = this.customSounds[contextType];
-            if (data && data.data) {
-                console.log("Playing custom file:", data.name);
-                const audio = new Audio(data.data);
-                audio.volume = vol;
-                audio.play().catch(e => console.error("Audio play error", e));
-
-                this.currentAudioElement = audio;
-
-                audio.onended = () => {
-                    this.isPlaying = false;
-                    this.currentAudioElement = null;
-                    console.log("Custom sound finished, dismissing alarm.");
-                    // AUTO DISMISS HERE
-                    this.dismissAlarm();
-                };
-                return;
-            } else {
-                console.warn("No custom file found, fallback to bell");
-                soundKey = 'bell';
-            }
+            if (data && data.data) audioSrc = data.data;
+        } else if (this.projectSounds[soundKey]) {
+            audioSrc = this.projectSounds[soundKey];
         }
 
-        // Ensure Context for configured sounds
+        if (audioSrc) {
+            console.log("Playing file sound:", soundKey);
+            const audio = new Audio(audioSrc);
+            audio.volume = vol;
+            audio.play().catch(e => console.error("Audio play error", e));
+
+            this.currentAudioElement = audio;
+
+            audio.onended = () => {
+                this.isPlaying = false;
+                this.currentAudioElement = null;
+                console.log("Sound finished, dismissing alarm.");
+                this.dismissAlarm();
+            };
+            return;
+        }
+
+        // Ensure Context for synthesized sounds
         if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (this.audioCtx.state === 'suspended') await this.audioCtx.resume();
 
@@ -363,13 +371,10 @@ class AlarmManager {
             default: this.playSoundBell(vol, shouldLoop);
         }
 
-        // Safety timeout for looped sounds (e.g., dismiss after 2 minutes if ignored)
-        // Only if it's a real alarm (not test) - playAlarmSound is reused for test
-        // Ideally we distinguish test vs real, but here we can just set it. 
-        // If testing, user will click elsewhere or it stops.
+        // Safety timeout for looped sounds
         if (this.autoDismissTimer) clearTimeout(this.autoDismissTimer);
         this.autoDismissTimer = setTimeout(() => {
-            if (this.isPlaying && soundKey !== 'custom') { // Custom handles itself
+            if (this.isPlaying && !audioSrc) { // Only for synth loops
                 this.dismissAlarm();
             }
         }, 60000); // 1 minute timeout for default sounds

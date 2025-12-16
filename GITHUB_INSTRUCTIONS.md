@@ -35,4 +35,21 @@ git push -u origin main
 ```
 
 ---
+
+---
 *หมายเหตุ: `USERNAME` คือชื่อผู้ใช้ GitHub ของคุณ*
+
+### ❌ ถ้าเจอปัญหา (Troubleshooting)
+
+**กรณีเจอ Error 403 "Permission denied"**
+แปลว่ารหัสผ่านหรือ Token ที่เครื่องจำไว้ **ไม่มีสิทธิ์เขียน (Write Access)** หรือ **หมดอายุ**
+
+**วิธีแก้ (Windows):**
+1. กดปุ่ม Start พิมพ์ค้นหา **"Credential Manager"** (ตัวจัดการข้อมูลประจำตัว)
+2. เลือกแถบ **Windows Credentials**
+3. หาหัวข้อ `git:https://github.com` แล้วกด **Remove** (ลบออก)
+4. กลับมาที่ VS Code ลองพิมพ์คำสั่ง `git push -u origin main` ใหม่
+5. จะมีหน้าต่างเด้งมาให้ Login:
+   - เลือก **"Sign in with your browser"** (ง่ายที่สุด)
+   - หรือใส่ Token ใหม่ถ้าใช้แบบ Token
+
