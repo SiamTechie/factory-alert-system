@@ -246,73 +246,46 @@
 
                 <hr class="border-gray-100 dark:border-gray-700">
 
-                <!-- Sound Settings -->
+                <!-- Sound Library & Selection -->
                 <div>
                     <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-                        ตั้งค่าเสียง (Sound)</h3>
+                        คลังเสียง (Sound Library)</h3>
 
+                    <!-- Add New Sound -->
+                    <div
+                        class="mb-4 bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg border border-dashed border-gray-300 dark:border-gray-600">
+                        <label class="block text-xs font-medium mb-2 text-gray-500">เพิ่มเสียงใหม่ (Mp3)</label>
+                        <input type="file" id="library-upload" accept="audio/*"
+                            class="text-xs w-full text-gray-500 dark:text-gray-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/50 dark:file:text-blue-200 cursor-pointer" />
+                        <p class="text-[10px] text-gray-400 mt-1">* ไฟล์จะถูกเก็บในเครื่องนี้เท่านั้น
+                            ไม่ซิงค์ไปเครื่องอื่น</p>
+                    </div>
+
+                    <!-- Selectors -->
                     <div class="space-y-4">
-                        <!-- Start Sound -->
                         <div
                             class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg border border-gray-100 dark:border-gray-700">
                             <label class="block text-sm font-medium mb-2">เสียงเริ่มพัก (Break Start)</label>
-                            <div class="flex flex-col gap-2">
-                                <div class="flex gap-2">
-                                    <select id="sound-start-select"
-                                        class="flex-1 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded text-sm p-2 focus:ring-blue-500 focus:border-blue-500 dark:text-white">
-                                        <option value="bell">🔔 เสียงกริ่งโรงเรียน (School Bell)</option>
-                                        <option value="project_bell2">🎹 Bell Ringing 2 (ในโปรเจค)</option>
-                                        <option value="project_bell3">🎹 Bell Ringing 3 (ในโปรเจค)</option>
-                                        <option value="electronic">⚡ เสียงออดไฟฟ้า (Electronic)</option>
-                                        <option value="melody">🎵 เสียงเมโลดี้ (Melody)</option>
-                                        <option value="announce">📢 เสียงประกาศ (Soft Chime)</option>
-                                        <option value="warning">⚠️ เสียงไซเรน (Siren)</option>
-                                        <option value="custom">📁 ไฟล์เสียงของฉัน (Custom File)</option>
-                                    </select>
-                                    <button id="test-start-sound"
-                                        class="w-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded text-gray-600 dark:text-gray-300 transition-colors">
-                                        ▶
-                                    </button>
-                                </div>
-                                <div id="start-custom-container" class="hidden animate-fade-in-down">
-                                    <input type="file" id="start-file-input" accept="audio/*"
-                                        class="text-xs w-full text-gray-500 dark:text-gray-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/50 dark:file:text-blue-200 cursor-pointer" />
-                                    <div id="start-file-name"
-                                        class="text-xs text-green-600 dark:text-green-400 mt-1 truncate border-l-2 border-green-500 pl-2 hidden">
-                                    </div>
-                                </div>
+                            <div class="flex gap-2">
+                                <select id="sound-start-select"
+                                    class="flex-1 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded text-sm p-2 focus:ring-blue-500 focus:border-blue-500 dark:text-white">
+                                    <!-- Options injected via JS -->
+                                </select>
+                                <button id="test-start-sound"
+                                    class="w-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded text-gray-600 dark:text-gray-300 transition-colors">▶</button>
                             </div>
                         </div>
 
-                        <!-- End Sound -->
                         <div
                             class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg border border-gray-100 dark:border-gray-700">
                             <label class="block text-sm font-medium mb-2">เสียงหมดเวลาพัก (Work Start)</label>
-                            <div class="flex flex-col gap-2">
-                                <div class="flex gap-2">
-                                    <select id="sound-end-select"
-                                        class="flex-1 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded text-sm p-2 focus:ring-blue-500 focus:border-blue-500 dark:text-white">
-                                        <option value="bell">🔔 เสียงกริ่งโรงเรียน (School Bell)</option>
-                                        <option value="project_bell2">🎹 Bell Ringing 2 (ในโปรเจค)</option>
-                                        <option value="project_bell3">🎹 Bell Ringing 3 (ในโปรเจค)</option>
-                                        <option value="electronic">⚡ เสียงออดไฟฟ้า (Electronic)</option>
-                                        <option value="melody">🎵 เสียงเมโลดี้ (Melody)</option>
-                                        <option value="announce">📢 เสียงประกาศ (Soft Chime)</option>
-                                        <option value="warning">⚠️ เสียงไซเรน (Siren)</option>
-                                        <option value="custom">📁 ไฟล์เสียงของฉัน (Custom File)</option>
-                                    </select>
-                                    <button id="test-end-sound"
-                                        class="w-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded text-gray-600 dark:text-gray-300 transition-colors">
-                                        ▶
-                                    </button>
-                                </div>
-                                <div id="end-custom-container" class="hidden animate-fade-in-down">
-                                    <input type="file" id="end-file-input" accept="audio/*"
-                                        class="text-xs w-full text-gray-500 dark:text-gray-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/50 dark:file:text-blue-200 cursor-pointer" />
-                                    <div id="end-file-name"
-                                        class="text-xs text-green-600 dark:text-green-400 mt-1 truncate border-l-2 border-green-500 pl-2 hidden">
-                                    </div>
-                                </div>
+                            <div class="flex gap-2">
+                                <select id="sound-end-select"
+                                    class="flex-1 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded text-sm p-2 focus:ring-blue-500 focus:border-blue-500 dark:text-white">
+                                    <!-- Options injected via JS -->
+                                </select>
+                                <button id="test-end-sound"
+                                    class="w-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded text-gray-600 dark:text-gray-300 transition-colors">▶</button>
                             </div>
                         </div>
 
@@ -358,7 +331,7 @@
 
             <div
                 class="p-4 bg-gray-50 dark:bg-gray-900 text-center text-xs text-gray-400 border-t border-gray-100 dark:border-gray-700">
-                Factory Alert System v1.4
+                Factory Alert System v1.5
             </div>
         </aside>
 
@@ -367,6 +340,35 @@
         </div>
 
     </main>
+
+    <!-- Modal: Password -->
+    <div id="password-modal" class="fixed inset-0 z-[150] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="pwd-backdrop"></div>
+        <div
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-xs relative overflow-hidden z-10 p-6 text-center transform scale-95 transition-all">
+            <div class="mb-4 text-blue-500">
+                <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                    </path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">ใส่รหัสผ่านเพื่อตั้งค่า</h3>
+            <p class="text-xs text-gray-500 mb-4">กรุณากรอกรหัสผ่านเพื่อเข้าถึงส่วนนี้</p>
+
+            <input type="password" id="pwd-input"
+                class="w-full text-center border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:text-white text-lg p-2 tracking-widest mb-2"
+                placeholder="••••••••">
+            <p id="pwd-error" class="text-xs text-red-500 hidden mb-2">รหัสผ่านไม่ถูกต้อง</p>
+
+            <div class="flex gap-2 justify-center mt-2">
+                <button id="pwd-cancel"
+                    class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">ยกเลิก</button>
+                <button id="pwd-submit"
+                    class="px-6 py-2 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded shadow">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Templates & Modals -->
     <template id="break-item-template">
@@ -382,7 +384,7 @@
                     class="edit-btn p-1.5 text-gray-400 hover:text-blue-500 rounded hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                            d="M11 5H6a2 2 0 00-2-2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                         </path>
                     </svg>
                 </button>
@@ -480,7 +482,7 @@
             </button>
         </div>
         <div class="absolute bottom-8 text-xs text-gray-500">
-            Factory Alert System v1.4
+            Factory Alert System v1.5
         </div>
     </div>
 
