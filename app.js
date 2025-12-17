@@ -43,9 +43,7 @@ class AlarmManager {
             markerContainer: document.getElementById('progress-markers'),
             dayProgress: document.getElementById('day-progress'),
             progressText: document.getElementById('progress-text'),
-            statusBadge: document.getElementById('status-badge'),
-            soundStartSelect: document.getElementById('sound-start-select'),
-            soundEndSelect: document.getElementById('sound-end-select')
+            statusBadge: document.getElementById('status-badge')
         };
 
         this.init();
@@ -63,22 +61,46 @@ class AlarmManager {
         this.updateSystemStatus();
         this.handleCrossTabSync();
 
-        // Init Overlay
+        // Init Overlay - Move to explicit setup to ensure elements exist
+        this.setupStartOverlay();
+    }
+
+    setupStartOverlay() {
         const overlay = document.getElementById('init-overlay');
         const startBtn = document.getElementById('start-btn');
+
+        if (!startBtn) return;
+
         const startApp = async () => {
+            console.log("Start button clicked");
             try {
                 if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 if (this.audioCtx.state === 'suspended') await this.audioCtx.resume();
                 this.playSilentUnlock();
+
+                // Force hide immediately to prevent UI blocking
                 if (overlay) {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => overlay.classList.add('hidden'), 300);
+                    overlay.style.display = 'none'; // Direct inline style to override everything
+                    overlay.classList.add('hidden');
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) {
+                console.error("Audio Init Error:", e);
+                if (overlay) {
+                    overlay.style.display = 'none';
+                    overlay.classList.add('hidden');
+                }
+            }
         };
-        if (startBtn) startBtn.onclick = startApp;
-        else document.addEventListener('click', startApp, { once: true });
+
+        startBtn.onclick = startApp;
+    }
+
+    // --- Setup & Config ---
+
+    requestNotificationPermission() {
+        if ('Notification' in window && Notification.permission !== 'granted') {
+            Notification.requestPermission();
+        }
     }
 
     // --- Data Management ---
@@ -393,6 +415,17 @@ class AlarmManager {
         const bg = document.getElementById('status-bg');
         if (mode === 'work') { bg.classList.remove('bg-red-500', 'bg-yellow-500'); bg.classList.add('bg-green-500'); }
         else { bg.classList.remove('bg-green-500', 'bg-yellow-500'); bg.classList.add('bg-red-500'); }
+    }
+    updateProgressBar(currentMinute) {
+        const startDay = 8 * 60;
+        const endDay = 17 * 60;
+        const total = endDay - startDay;
+        let progress = 0;
+        if (currentMinute > startDay) progress = ((currentMinute - startDay) / total) * 100;
+        if (progress > 100) progress = 100;
+        if (progress < 0) progress = 0;
+        this.dom.dayProgress.style.width = `${progress}%`;
+        this.dom.progressText.textContent = `${Math.floor(progress)}% ของวันทำงาน`;
     }
     triggerAlarm(breakItem, type) {
         const title = type === 'start' ? `ได้เวลา ${breakItem.name}` : 'หมดเวลาพักแล้ว!';
