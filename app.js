@@ -67,32 +67,41 @@ class AlarmManager {
 
     setupStartOverlay() {
         const overlay = document.getElementById('init-overlay');
-        const startBtn = document.getElementById('start-btn');
 
-        if (!startBtn) return;
-
-        const startApp = async () => {
-            console.log("Start button clicked");
+        // Auto-start immediately without requiring user interaction
+        const autoStartApp = async () => {
+            console.log("Auto-starting application...");
             try {
-                if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (this.audioCtx.state === 'suspended') await this.audioCtx.resume();
-                this.playSilentUnlock();
+                // Initialize audio context (may be suspended until user interaction)
+                if (!this.audioCtx) {
+                    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
 
-                // Force hide immediately to prevent UI blocking
-                if (overlay) {
-                    overlay.style.display = 'none'; // Direct inline style to override everything
-                    overlay.classList.add('hidden');
+                // Try to resume if suspended (will work after first user interaction)
+                if (this.audioCtx.state === 'suspended') {
+                    await this.audioCtx.resume().catch(e => {
+                        console.log("Audio context will resume on first user interaction");
+                    });
                 }
+
+                this.playSilentUnlock();
             } catch (e) {
-                console.error("Audio Init Error:", e);
-                if (overlay) {
-                    overlay.style.display = 'none';
-                    overlay.classList.add('hidden');
-                }
+                console.log("Audio will be initialized on first user interaction:", e);
+            }
+
+            // Hide overlay immediately using proper class manipulation
+            if (overlay) {
+                setTimeout(() => {
+                    overlay.classList.add('opacity-0');
+                    setTimeout(() => {
+                        overlay.classList.add('hidden');
+                    }, 500);
+                }, 100);
             }
         };
 
-        startBtn.onclick = startApp;
+        // Execute auto-start immediately
+        autoStartApp();
     }
 
     // --- Setup & Config ---
@@ -289,35 +298,8 @@ class AlarmManager {
     // --- Security & Panel ---
 
     openSettingsSecurely() {
-        // Show Password Modal
-        const modal = document.getElementById('password-modal');
-        const input = document.getElementById('pwd-input');
-        const error = document.getElementById('pwd-error');
-
-        modal.classList.remove('hidden');
-        input.value = '';
-        error.classList.add('hidden');
-        input.focus();
-
-        const submit = () => {
-            if (input.value === 'support1234') {
-                modal.classList.add('hidden');
-                this.openSettingsPanel();
-            } else {
-                error.classList.remove('hidden');
-                input.value = '';
-                input.focus();
-            }
-        };
-
-        const cancel = () => {
-            modal.classList.add('hidden');
-        };
-
-        document.getElementById('pwd-submit').onclick = submit;
-        document.getElementById('pwd-cancel').onclick = cancel;
-        input.onkeydown = (e) => { if (e.key === 'Enter') submit(); };
-        document.getElementById('pwd-backdrop').onclick = cancel;
+        // No password required - open settings directly
+        this.openSettingsPanel();
     }
 
     openSettingsPanel() {

@@ -1,14 +1,24 @@
-# OS junk
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+firebase-debug.*.log
+
+# Node
+node_modules/
+package-lock.json
+yarn.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
 Thumbs.db
 
-# Dependencies (if you add them later)
-node_modules/
-u_modules/
-
-# Environment variables
-.env
-
-# Editor directories
-.idea/
-.vscode/
+# Logs
+*.log
+npm-debug.log*
