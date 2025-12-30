@@ -66,42 +66,29 @@ class AlarmManager {
     }
 
     setupStartOverlay() {
-        const overlay = document.getElementById('init-overlay');
-
-        // Auto-start immediately without requiring user interaction
-        const autoStartApp = async () => {
-            console.log("Auto-starting application...");
+        // Initialize audio context for sound alerts
+        const initAudio = async () => {
             try {
-                // Initialize audio context (may be suspended until user interaction)
                 if (!this.audioCtx) {
                     this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 }
 
-                // Try to resume if suspended (will work after first user interaction)
                 if (this.audioCtx.state === 'suspended') {
-                    await this.audioCtx.resume().catch(e => {
-                        console.log("Audio context will resume on first user interaction");
+                    this.audioCtx.resume().then(() => {
+                        console.log("Audio context ready");
+                        this.playSilentUnlock();
+                    }).catch(() => {
+                        console.log("Audio will activate on first user interaction");
                     });
+                } else {
+                    this.playSilentUnlock();
                 }
-
-                this.playSilentUnlock();
             } catch (e) {
-                console.log("Audio will be initialized on first user interaction:", e);
-            }
-
-            // Hide overlay immediately using proper class manipulation
-            if (overlay) {
-                setTimeout(() => {
-                    overlay.classList.add('opacity-0');
-                    setTimeout(() => {
-                        overlay.classList.add('hidden');
-                    }, 500);
-                }, 100);
+                console.log("Audio initialization:", e);
             }
         };
 
-        // Execute auto-start immediately
-        autoStartApp();
+        initAudio();
     }
 
     // --- Setup & Config ---
